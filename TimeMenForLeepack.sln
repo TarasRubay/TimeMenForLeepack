@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeMenForLeepack", "TimeMenForLeepack\TimeMenForLeepack.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CounterATMega328", "CounterATMega328\CounterATMega328.vcxproj", "{40D16993-5E3E-4C11-952B-1759AF73025B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "leepackTester", "leepackTester\leepackTester.vcxproj", "{DDBFA2AB-B2F9-4628-9180-E2374F825A38}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicHttpsClient", "..\..\..\Documents\Arduino\My Examples\BasicHttpsClient\BasicHttpsClient.vcxproj", "{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Any CPU.Build.0 = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Any CPU.Build.0 = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Debug|Any CPU.Build.0 = Debug|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Debug|x86.ActiveCfg = Debug|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Debug|x86.Build.0 = Debug|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Release|Any CPU.Build.0 = Release|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Release|x86.ActiveCfg = Release|Win32
+		{40D16993-5E3E-4C11-952B-1759AF73025B}.Release|x86.Build.0 = Release|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Debug|Any CPU.Build.0 = Debug|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Debug|x86.ActiveCfg = Debug|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Debug|x86.Build.0 = Debug|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Release|Any CPU.Build.0 = Release|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Release|x86.ActiveCfg = Release|Win32
+		{DDBFA2AB-B2F9-4628-9180-E2374F825A38}.Release|x86.Build.0 = Release|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Debug|Any CPU.Build.0 = Debug|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Debug|x86.ActiveCfg = Debug|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Debug|x86.Build.0 = Debug|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Release|Any CPU.ActiveCfg = Release|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Release|Any CPU.Build.0 = Release|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Release|x86.ActiveCfg = Release|Win32
+		{7CBCEC1F-D362-4F5C-B03B-B8431F1DA5B0}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E507850E-F466-4D1C-AA53-44FAD11C4B2D}
+	EndGlobalSection
+EndGlobal

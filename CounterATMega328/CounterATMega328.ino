@@ -6,6 +6,7 @@
 #include <ArduinoJson.hpp>
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
+#include <stdio.h>
 
 const byte rxPin = 9;
 const byte txPin = 6;
@@ -15,15 +16,35 @@ SoftwareSerial mySerial(rxPin, txPin);
 int buttom = 2;
 int count = 0;
 void setup() {
-	Serial.begin(9600);
-	mySerial.begin(9600);
+	Serial.begin(115200);
+	mySerial.begin(115200);
 
 	pinMode(11, OUTPUT);
 	pinMode(LED_BUILTIN, OUTPUT);
 	pinMode(buttom, INPUT);
 	pinMode(3, INPUT);
 }
+void CountRunTimeNew(unsigned long timeUpdate) {
+	bool flagFirst = true;
+	bool flagSecond = true;
+	int countSpeedFirst = 0;
+	int countSpeedSecond = 0;
+	unsigned long timeRun = millis() + timeUpdate;
+	while (millis() != timeRun)
+	{
+		if (!digitalRead(3) == flagFirst) {
+			flagFirst = !flagFirst;
+			if(flagFirst)countSpeedFirst++;
+		}
 
+		if (!digitalRead(5) == flagSecond) {
+			flagSecond = !flagSecond;
+			if (flagSecond)countSpeedSecond++;
+		}		
+	}
+
+	SendSimpleText(countSpeedFirst, countSpeedSecond);
+}
 void CountTime(long int timeLaps) {
 	long int timeRun = 0;
 	long int countSpeed = 0;
@@ -85,6 +106,14 @@ void CountRunTime(long int timeUpdate) {
 			
 	//SendJsonDataNew(1, countRequestFirst, countRequestSecond, timeStop + stoppedAfter,countSpeedFirst/2,countSpeedSecond/2);
 	SendJsonDataNew(1, timeStop + stoppedAfter,countSpeedFirst,countSpeedSecond);
+}
+void SendSimpleText(int countFirst, int countSecond) {
+	StaticJsonDocument<256> doc;
+	doc["SN"] = 2;
+	doc["CF"] = countFirst;
+	doc["CS"] = countSecond;
+	serializeJson(doc,Serial);
+	serializeJson(doc,mySerial);//{"SN":2,"CF":0,"CS":0}
 }
 void SendJsonDataNew(int serialNumber, int countRequestFirst,int countRequestSecond,long int timeStop, int avgSpeedF, int avgSpeedS) {
 	digitalWrite(LED_BUILTIN, HIGH);
@@ -148,6 +177,6 @@ void SampleJson() {
 	digitalWrite(LED_BUILTIN, LOW);
 }
 void loop() {
-	CountRunTime(58000);
+	CountRunTimeNew(60000);
 	//CountTime(5000);
 }

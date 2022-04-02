@@ -21,7 +21,7 @@ ESP8266WiFiMulti WiFiMulti;
 
 void setup() {
 
-    Serial.begin(9600);
+    Serial.begin(115200);
     // Serial.setDebugOutput(true);
 
     Serial.println();
@@ -35,10 +35,11 @@ void setup() {
     }
 
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP("DANA", "11160045");
+    //WiFiMulti.addAP("DANA", "11160045");
+    WiFiMulti.addAP("ASUS", "donperes");
 }
 
-void sendDataTest(String message) {
+int sendDataTest(String message) {
     unsigned long time = millis();
     if ((WiFiMulti.run() == WL_CONNECTED)) {
 
@@ -69,21 +70,26 @@ void sendDataTest(String message) {
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                     String payload = https.getString();
                     Serial.println(payload);
+                    https.end();
+                    return httpCode;
                 }
             }
             else {
                 Serial.printf("[HTTPS] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
+                https.end();
+                return 3;
             }
             https.end();
-            //msg = "";
         }
         else {
             Serial.printf("[HTTPS] Unable to connect\n");
+            return 2;
         }
 
 
     }
-    Serial.println(millis() - time);
+    return 1;
+    //Serial.println(millis() - time);
 }
 void sendData(String message) {
     if ((WiFiMulti.run() == WL_CONNECTED)) {
@@ -106,7 +112,24 @@ void loop() {
     String msg = Serial.readString();
     Serial.println(msg.length());
     if (msg.length() != 0) {
-        sendDataTest(msg);
+        int try_send = 4;
+        int code = sendDataTest(msg);
+        Serial.print(code);
+        Serial.println(" - code");
+        if (code != 200) {
+            for (int i = 0; i <= try_send; i++)
+            {
+            code = sendDataTest(msg);
+            if (code == 200)break;
+            Serial.print(code);
+            Serial.print(" -code  try send");
+            Serial.println(i);
+            delay(1000);
+            }
+        }
+        else
+            Serial.printf("[HTTPS] send ok\n");
         //sendData(msg);
     }
 }
+

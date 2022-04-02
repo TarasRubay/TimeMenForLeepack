@@ -109,10 +109,11 @@ void CountRunTime(long int timeUpdate) {
 }
 void SendSimpleText(int countFirst, int countSecond) {
 	StaticJsonDocument<256> doc;
-	doc["CF"] = countFirst;
-	doc["CS"] = countSecond;
+	doc["Serial"] = 2;
+	doc["First"] = countFirst;
+	doc["Second"] = countSecond;
 	//serializeJson(doc,Serial);
-	serializeJson(doc,mySerial);//{"SN":2,"CF":0,"CS":0}
+	serializeJson(doc,mySerial);//{"CF":0,"CS":0}
 }
 void SendJsonDataNew(int serialNumber, int countRequestFirst,int countRequestSecond,long int timeStop, int avgSpeedF, int avgSpeedS) {
 	digitalWrite(LED_BUILTIN, HIGH);

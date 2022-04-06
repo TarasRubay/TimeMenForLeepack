@@ -21,7 +21,7 @@ ESP8266WiFiMulti WiFiMulti;
 
 void setup() {
 
-    Serial.begin(115200);
+    Serial.begin(56000);
     // Serial.setDebugOutput(true);
 
     Serial.println();
@@ -45,14 +45,14 @@ int sendDataTest(String message) {
 
         std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
 
-        client->setFingerprint(fingerprint);
+        //client->setFingerprint(fingerprint);
         // Or, if you happy to ignore the SSL certificate, then use the following line instead:
-        // client->setInsecure();
+         client->setInsecure();
 
         HTTPClient https;
 
         Serial.print("[HTTPS] begin...\n");
-        if (https.begin(*client, "https://pipeliner.azurewebsites.net/api/ESP8266")) {  // HTTPS
+        if (https.begin(*client, "https://leanproduction.azurewebsites.net/api/Input")) {  // HTTPS
 
             Serial.print("[HTTPS] POST...\n");
 
@@ -107,12 +107,19 @@ void sendData(String message) {
         }
     }
 }
+
+//1#15#15#15#15
+//public int SerialNumber{ get; set; }
+//public int CountFirst{ get; set; }
+//public int CountSecond{ get; set; }
+//public int CountFirstDemage{ get; set; }
+//public int CountSecondDemage{ get; set; }
 void loop() {
 
     String msg = Serial.readString();
     Serial.println(msg.length());
     if (msg.length() != 0) {
-        int try_send = 4;
+        int try_send = 5;
         int code = sendDataTest(msg);
         Serial.print(code);
         Serial.println(" - code");

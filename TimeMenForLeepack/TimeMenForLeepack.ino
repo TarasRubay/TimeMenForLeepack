@@ -21,7 +21,7 @@ ESP8266WiFiMulti WiFiMulti;
 
 void setup() {
 
-    Serial.begin(56000);
+    Serial.begin(9600);
     // Serial.setDebugOutput(true);
 
     Serial.println();
@@ -35,8 +35,8 @@ void setup() {
     }
 
     WiFi.mode(WIFI_STA);
-    //WiFiMulti.addAP("DANA", "11160045");
-    WiFiMulti.addAP("ASUS", "donperes");
+    WiFiMulti.addAP("DANA", "11160045");
+    //WiFiMulti.addAP("ASUS", "donperes");
 }
 
 int sendDataTest(String message) {
@@ -117,9 +117,8 @@ void sendData(String message) {
 void loop() {
 
     String msg = Serial.readString();
-    Serial.println(msg.length());
     if (msg.length() != 0) {
-        int try_send = 5;
+        int try_send = 4;
         int code = sendDataTest(msg);
         Serial.print(code);
         Serial.println(" - code");
@@ -136,7 +135,6 @@ void loop() {
         }
         else
             Serial.printf("[HTTPS] send ok\n");
-        //sendData(msg);
     }
 }
 

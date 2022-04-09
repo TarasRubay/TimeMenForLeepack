@@ -16,11 +16,14 @@ SoftwareSerial mySerial(rxPin, txPin);
 int buttom = 2;
 int count = 0;
 void setup() {
-	Serial.begin(56000);
-	mySerial.begin(56000);
+	Serial.begin(9600);
+	mySerial.begin(9600);
 
-	pinMode(11, OUTPUT);
-	pinMode(10, OUTPUT);
+	pinMode(3, INPUT);
+	pinMode(5, INPUT);
+	pinMode(10, INPUT);
+	pinMode(11, INPUT);
+	
 	pinMode(LED_BUILTIN, OUTPUT);
 	pinMode(buttom, INPUT);
 	pinMode(3, INPUT);
@@ -34,50 +37,37 @@ void CountRunTimeNew(unsigned long timeUpdate) {
 	bool flag2 = false;
 	int countSpeedFirst = 0;
 	int countSpeedSecond = 0;
-	unsigned long timeRun = millis() + timeUpdate;
 	int third = 0;
 	int four = 0;
-    //int third = analogRead(A2);
+	unsigned long timeRun = millis() + timeUpdate;
 	while (millis() != timeRun)
 	{
-		/*flag1 = 0;
-		flag2 = 0;
-		if (analogRead(A0) > analogRead(A2))flag1 = true;
-		if(analogRead(A1) > analogRead(A3))flag2 = true;*/
-		if (!digitalRead(3) == flagFirst) {
+		
+		if (digitalRead(3) == flagFirst) {
+			countSpeedFirst++;
 			flagFirst = !flagFirst;
-			if(!flagFirst)countSpeedFirst++;
 		}
 
-		if (!digitalRead(5) == flagSecond) {
+		if (digitalRead(5) == flagSecond) {
+			countSpeedSecond++;
 			flagSecond = !flagSecond;
-			if (!flagSecond)countSpeedSecond++;
 		}
-		if (digitalRead(A2) == flagThird) {
+
+
+		/*if (!digitalRead(10) == flagThird) {
 			flagThird = !flagThird;
-			if (!flagThird) {
+			if (flagThird) {
 				third++;
-				digitalWrite(11, HIGH);
 			}
 		}
 
-		if  (digitalRead(A3) == flagFour) {
+		if  (!digitalRead(11) == flagFour) {
 			flagFour = !flagFour;
-			if (!flagFour) {
+			if (flagFour) {
 				four++;
-				digitalWrite(10, HIGH);
 			}
-		}
-		/*Serial.print(analogRead(A0));
-		Serial.print(' ');
-		Serial.print(analogRead(A1));
-		Serial.print(' ');
-		Serial.print(analogRead(A2));
-		Serial.print(' ');
-		Serial.println(analogRead(A3));*/
-
-		digitalWrite(10, LOW);
-		digitalWrite(11, LOW);
+		}*/
+		
 	}
 
 	SendSimpleText(countSpeedFirst, countSpeedSecond, third, four);
@@ -104,55 +94,55 @@ void CountTime(long int timeLaps) {
 	SendJsonData(timeRun, (countSpeed - 1) / 2);
 }
 void CountRunTime(long int timeUpdate) {
-	int stoppedAfter = 1600;
-	int countRequestFirst = 0;
-	int countRequestSecond = 0;
-	long int timeStop = 0;
-	long int counter = 0;
 	bool flagFirst = true;
 	bool flagSecond = true;
+	bool flagThird = true;
+	bool flagFour = true;
 	int countSpeedFirst = 0;
 	int countSpeedSecond = 0;
-	for (int long i = 0; i < timeUpdate; i++)
+	int countSpeedThird = 0;
+	int countSpeedFour = 0;
+	int FirstReader;
+	int SecondReader;
+	int ThirdReader;
+	int FourReader;
+	for (int long i = 0; i <= timeUpdate; i++)
 	{
-		if (!digitalRead(3) == flagFirst) {
+		FirstReader = digitalRead(5);// 1
+		SecondReader = digitalRead(3);// 2
+		ThirdReader = digitalRead(11);// 1
+		FourReader = digitalRead(10);// 2
+		/*long xaxaxa = 444444;
+		long xaxax = 444444;
+		long xaxa = 444444;
+		long xax = 444444;
+		long xa = 444444;
+		long x = 444444;*/
+		delayMicroseconds(969);
+
+		if (FirstReader == flagFirst) {
 			flagFirst = !flagFirst;
-			countSpeedFirst++;
+			if(flagFirst)countSpeedFirst++;
 		}
-		
-		if (!digitalRead(5) == flagSecond) {
+		if (SecondReader == flagSecond) {
 			flagSecond = !flagSecond;
-			countSpeedSecond++;
+			if(flagSecond)countSpeedSecond++;
+		}
+		if (ThirdReader == flagThird) {
+			flagThird = !flagThird;
+			if (flagThird)countSpeedThird++;
+		}
+		if (FourReader == flagFour) {
+			flagFour = !flagFour;
+			if (flagFour)countSpeedFour++;
 		}
 
-			if (!digitalRead(3)) {
-				countRequestFirst++;
-				counter = 0;
-			}
-
-			if (!digitalRead(5)) {
-				countRequestSecond++;
-				counter = 0;
-			}
-			
-			if (digitalRead(5) && digitalRead(3))counter++;
-			if (counter > stoppedAfter)timeStop++;
-		
-		delay(1);
 	}
-			
-	//SendJsonDataNew(1, countRequestFirst, countRequestSecond, timeStop + stoppedAfter,countSpeedFirst/2,countSpeedSecond/2);
-	SendJsonDataNew(1, timeStop + stoppedAfter,countSpeedFirst,countSpeedSecond);
+	SendSimpleText(countSpeedFirst,countSpeedSecond,countSpeedThird,countSpeedFour);
 }
 void SendSimpleText(int countFirst, int countSecond, int third, int four) {
-	/*StaticJsonDocument<256> doc;
-	doc["Serial"] = 2;
-	doc["First"] = countFirst;
-	doc["Second"] = countSecond;
-	doc["millis"] = millis();*/
-	//serializeJson(doc,Serial);
-	//serializeJson(doc,mySerial);//{"CF":0,"CS":0}
-	Serial.print("{\"Sn\":");
+	
+	/*Serial.print("{\"Sn\":");
 	Serial.print(1);
 	Serial.print(",\"A\":");
 	Serial.print(countFirst);
@@ -162,7 +152,14 @@ void SendSimpleText(int countFirst, int countSecond, int third, int four) {
 	Serial.print(third);
 	Serial.print(",\"D\":");
 	Serial.print(four);
-	Serial.print("}");
+	Serial.println("}");
+	*/
+	/*Serial.print(countFirst);
+	Serial.print(countSecond);
+	Serial.print(third);
+	Serial.print(four);*/
+	//Serial.println(millis());
+
 
 	mySerial.print("{\"Sn\":");
 	mySerial.print(1);
@@ -175,8 +172,7 @@ void SendSimpleText(int countFirst, int countSecond, int third, int four) {
 	mySerial.print(",\"D\":");
 	mySerial.print(four);
 	mySerial.print("}");
-	//Serial.println('#');
-	//Serial.println(millis());
+	
 }
 void SendJsonDataNew(int serialNumber, int countRequestFirst,int countRequestSecond,long int timeStop, int avgSpeedF, int avgSpeedS) {
 	digitalWrite(LED_BUILTIN, HIGH);
@@ -241,7 +237,10 @@ void SampleJson() {
 }
 void loop() {
 	
-	CountRunTimeNew(60000);
+	//CountRunTimeNew(3750); 
+	//CountRunTime(2000);
+	CountRunTime(60000);
+	//60013 501 503 472 506
 	
 	
 }

@@ -36,6 +36,7 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
     WiFiMulti.addAP("DANA", "11160045");
+    //WiFiMulti.addAP("kormotech", "a9GyeUce");
     //WiFiMulti.addAP("ASUS", "donperes");
 }
 
@@ -96,7 +97,7 @@ void sendData(String message) {
         std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
         client->setFingerprint(fingerprint);
         HTTPClient https;
-        if (https.begin(*client, "https://pipeliner.azurewebsites.net/api/ESP8266")) {  // HTTPS
+        if (https.begin(*client, "https://pipe.leananalistic.com.ua/api/fromesp")) {  // HTTPS
             https.addHeader("Content-Type", "application/json");
             https.addHeader("User-Agent", "Arduino");
             https.addHeader("Accept", "*/*");
@@ -117,6 +118,7 @@ void sendData(String message) {
 void loop() {
 
     String msg = Serial.readString();
+    //Serial.println("online");
     if (msg.length() != 0) {
         int try_send = 4;
         int code = sendDataTest(msg);

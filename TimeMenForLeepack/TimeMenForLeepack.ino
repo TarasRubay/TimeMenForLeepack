@@ -53,7 +53,7 @@ int sendDataTest(String message) {
         HTTPClient https;
 
         Serial.print("[HTTPS] begin...\n");
-        if (https.begin(*client, "https://leanproduction.azurewebsites.net/api/Input")) {  // HTTPS
+        if (https.begin(*client, "https://pipe.leananalistic.com.ua/api/fromesp")) {  // HTTPS
 
             Serial.print("[HTTPS] POST...\n");
 
@@ -92,22 +92,7 @@ int sendDataTest(String message) {
     return 1;
     //Serial.println(millis() - time);
 }
-void sendData(String message) {
-    if ((WiFiMulti.run() == WL_CONNECTED)) {
-        std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
-        client->setFingerprint(fingerprint);
-        HTTPClient https;
-        if (https.begin(*client, "https://pipe.leananalistic.com.ua/api/fromesp")) {  // HTTPS
-            https.addHeader("Content-Type", "application/json");
-            https.addHeader("User-Agent", "Arduino");
-            https.addHeader("Accept", "*/*");
-            https.addHeader("Connection", "keep-alive");
-            String jsonText = "{ \"jsondata\": \"" + message + "\" }";
-            int httpCode = https.POST(jsonText);
-            https.end();
-        }
-    }
-}
+
 
 //1#15#15#15#15
 //public int SerialNumber{ get; set; }

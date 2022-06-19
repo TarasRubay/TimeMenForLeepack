@@ -6,7 +6,8 @@
 */
 
 #include <Arduino.h>
-
+#include <Time.h>
+#include <TimeAlarms.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 
@@ -16,6 +17,7 @@
 // Fingerprint for demo URL, expires on June 2, 2021, needs to be updated well before this date
 //const uint8_t fingerprint[20] = { 0x40, 0xaf, 0x00, 0x6b, 0xec, 0x90, 0x22, 0x41, 0x8e, 0xa3, 0xad, 0xfa, 0x1a, 0xe8, 0x25, 0x41, 0x1d, 0x1a, 0x54, 0xb3 };
 const char fingerprint[] = "4924e700d512b302b7e87be2c6ffb35d467f1acc";
+
 
 ESP8266WiFiMulti WiFiMulti;
 
@@ -33,11 +35,18 @@ void setup() {
         Serial.flush();
         delay(1000);
     }
-
+    
+    //setTime(8, 29, 0, 1, 1, 11); // set time to Saturday 8:29:00am Jan 1 2011
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP("DANA", "11160045");
+    
+    //fkfkdljglfdg;olkblknbgkcnbgnvb.c
+    
+    
+    WiFiMulti.addAP("DANA", "11160045"); 
     //WiFiMulti.addAP("kormotech", "a9GyeUce");
     //WiFiMulti.addAP("ASUS", "donperes");
+    //WiFiMulti.addAP("AP", "donperes");
+    
 }
 
 int sendDataTest(String message) {
@@ -94,16 +103,11 @@ int sendDataTest(String message) {
 }
 
 
-//1#15#15#15#15
-//public int SerialNumber{ get; set; }
-//public int CountFirst{ get; set; }
-//public int CountSecond{ get; set; }
-//public int CountFirstDemage{ get; set; }
-//public int CountSecondDemage{ get; set; }
-void loop() {
 
+
+
+void loop() {
     String msg = Serial.readString();
-    //Serial.println("online");
     if (msg.length() != 0) {
         int try_send = 4;
         int code = sendDataTest(msg);
@@ -123,5 +127,6 @@ void loop() {
         else
             Serial.printf("[HTTPS] send ok\n");
     }
+    
 }
 

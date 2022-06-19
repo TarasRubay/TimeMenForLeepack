@@ -6,7 +6,8 @@
 */
 
 #include <Arduino.h>
-
+#include <Time.h>
+#include <TimeAlarms.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 
@@ -16,6 +17,7 @@
 // Fingerprint for demo URL, expires on June 2, 2021, needs to be updated well before this date
 //const uint8_t fingerprint[20] = { 0x40, 0xaf, 0x00, 0x6b, 0xec, 0x90, 0x22, 0x41, 0x8e, 0xa3, 0xad, 0xfa, 0x1a, 0xe8, 0x25, 0x41, 0x1d, 0x1a, 0x54, 0xb3 };
 const char fingerprint[] = "4924e700d512b302b7e87be2c6ffb35d467f1acc";
+
 
 ESP8266WiFiMulti WiFiMulti;
 
@@ -33,25 +35,34 @@ void setup() {
         Serial.flush();
         delay(1000);
     }
-
+    
+    //setTime(8, 29, 0, 1, 1, 11); // set time to Saturday 8:29:00am Jan 1 2011
     WiFi.mode(WIFI_STA);
-    WiFiMulti.addAP("DANA", "11160045");
+    
+    //fkfkdljglfdg;olkblknbgkcnbgnvb.c
+    
+    
+    WiFiMulti.addAP("DANA", "11160045"); 
+    //WiFiMulti.addAP("kormotech", "a9GyeUce");
+    //WiFiMulti.addAP("ASUS", "donperes");
+    //WiFiMulti.addAP("AP", "donperes");
+    
 }
 
-void sendDataTest(String message) {
+int sendDataTest(String message) {
     unsigned long time = millis();
     if ((WiFiMulti.run() == WL_CONNECTED)) {
 
         std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
 
-        client->setFingerprint(fingerprint);
+        //client->setFingerprint(fingerprint);
         // Or, if you happy to ignore the SSL certificate, then use the following line instead:
-        // client->setInsecure();
+         client->setInsecure();
 
         HTTPClient https;
 
         Serial.print("[HTTPS] begin...\n");
-        if (https.begin(*client, "https://pipeliner.azurewebsites.net/api/ESP8266")) {  // HTTPS
+        if (https.begin(*client, "https://pipe.leananalistic.com.ua/api/fromesp")) {  // HTTPS
 
             Serial.print("[HTTPS] POST...\n");
 
@@ -69,44 +80,53 @@ void sendDataTest(String message) {
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                     String payload = https.getString();
                     Serial.println(payload);
+                    https.end();
+                    return httpCode;
                 }
             }
             else {
                 Serial.printf("[HTTPS] POST... failed, error: %s\n", https.errorToString(httpCode).c_str());
+                https.end();
+                return 3;
             }
             https.end();
-            //msg = "";
         }
         else {
             Serial.printf("[HTTPS] Unable to connect\n");
+            return 2;
         }
 
 
     }
-    Serial.println(millis() - time);
+    return 1;
+    //Serial.println(millis() - time);
 }
-void sendData(String message) {
-    if ((WiFiMulti.run() == WL_CONNECTED)) {
-        std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
-        client->setFingerprint(fingerprint);
-        HTTPClient https;
-        if (https.begin(*client, "https://pipeliner.azurewebsites.net/api/ESP8266")) {  // HTTPS
-            https.addHeader("Content-Type", "application/json");
-            https.addHeader("User-Agent", "Arduino");
-            https.addHeader("Accept", "*/*");
-            https.addHeader("Connection", "keep-alive");
-            String jsonText = "{ \"jsondata\": \"" + message + "\" }";
-            int httpCode = https.POST(jsonText);
-            https.end();
-        }
-    }
-}
+
+
+
+
+
 void loop() {
-
     String msg = Serial.readString();
-    Serial.println(msg.length());
     if (msg.length() != 0) {
-        sendDataTest(msg);
-        //sendData(msg);
+        int try_send = 4;
+        int code = sendDataTest(msg);
+        Serial.print(code);
+        Serial.println(" - code");
+        if (code != 200) {
+            for (int i = 0; i <= try_send; i++)
+            {
+            code = sendDataTest(msg);
+            if (code == 200)break;
+            Serial.print(code);
+            Serial.print(" -code  try send");
+            Serial.println(i);
+            delay(1000);
+            }
+        }
+        else
+            Serial.printf("[HTTPS] send ok\n");
     }
+    
 }
+

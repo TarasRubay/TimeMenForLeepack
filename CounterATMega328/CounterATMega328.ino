@@ -172,7 +172,12 @@ void setup(void) {
 #endif
 	Serial.begin(9600);
 	mySerial.begin(9600);
-
+	for (uint8_t t = 15; t > 0; t--) {
+		Serial.print("[SETUP] WAIT:  ");
+		Serial.println(t);
+		Serial.flush();
+		delay(1000);
+	}
 	if (!accel.begin())
 	{
 		/* There was a problem detecting the ADXL345 ... check your connections */
@@ -293,6 +298,7 @@ void SendJsonDataNew(int serialNumber, long int timeStop, int avgSpeedF, int avg
 	StaticJsonDocument<256> doc2;
 	String a;
 	serializeJson(doc, a);
+
 	doc2["jsondata"] =  a;
 	//{"jsondata": "{SN:32, TS : 1600, AVGF : 9, AVGS : 7}"}
 	//serializeJson(doc2, Serial);
@@ -355,14 +361,14 @@ void CountTipa(bool writeSerial) {
 }
 void SendTipaJson(bool writeSerial) {
 	if (writeSerial) {
-	Serial.print("{\"SN\":");
+	/*Serial.print("{\"SN\":");
 	Serial.print(2);
 	Serial.print(",\"HO\":");
 	Serial.print(22);
 	Serial.print(",\"MI\":");
 	Serial.print(22);
 	Serial.print(",\"SE\":");
-	Serial.print(22);
+	Serial.print(22);*/
 	Serial.print(",\"A\":");
 	Serial.print(A);
 	Serial.print(",\"B\":");
@@ -393,7 +399,7 @@ void SendTipaJson(bool writeSerial) {
 	Serial.print(N);
 	Serial.print("}");
 	}
-	
+	/*
 	mySerial.print("{\"SN\":");
 	mySerial.print(2222);
 	mySerial.print(",\"HO\":");
@@ -401,7 +407,7 @@ void SendTipaJson(bool writeSerial) {
 	mySerial.print(",\"MI\":");
 	mySerial.print(33);
 	mySerial.print(",\"SE\":");
-	mySerial.print(33);
+	mySerial.print(33);*/
 	mySerial.print(",\"A\":");
 	mySerial.print(A);
 	mySerial.print(",\"B\":");

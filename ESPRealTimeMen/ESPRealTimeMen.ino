@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <Time.h>
-#include <TimeAlarms.h>
+
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecureBearSSL.h>
+#include <ArduinoQueue.h>
 
 using namespace std;
 
@@ -40,39 +41,48 @@ public:
     int hour;
     int minute;
     int second;
-
+    bool first_start;
     void Print() {
         Serial.printf("% d", this->hour);
         Serial.printf(":% d", this->minute);
         Serial.printf(":% d\n", this->second);
         Serial.flush();
     }
-    
+    void Add_seconds(int sec) {
+        for (int i = 0; i < sec; i++)
+        {
+            _add_one_step();
+        }
+    }
     void Run() {
 
         if (_time_step == millis()) {
             _add_one_step();
-            //Serial.printf("sec: %d\n", this->second);
-            //Serial.flush();
-            
-            
             this->Print();
         }
         
     }
     void set_time(String playload) {
-        //15:37:03
+        //1:37:03
         //01234567
-        int aa = playload.substring(0,1).toInt() * 10;
-        int ab = playload.substring(1,2).toInt();
-        int ba = playload.substring(3,4).toInt() * 10;
-        int bb = playload.substring(4,5).toInt();
-        int ca = playload.substring(6,7).toInt() * 10;
-        int cb = playload.substring(7).toInt();
-        this->hour = aa + ab;
-        this->minute = ba + bb;
-        this->second = ca + cb;
+        vector<int> dat;
+        String t = "";
+        for (int i = 0; i < playload.length(); i++)
+        {
+            t += playload[i];
+            if (playload[i] == ':') {
+                dat.push_back(t.toInt());
+                t = "";
+            }
+        }
+        this->hour = dat[0];
+        this->minute = dat[1];
+        this->second = dat[2];
+        t.clear();
+        dat.clear();
+        
         _time_step = millis() + 1000;
+        if(!first_start) first_start = true;
     }
     Time operator++()
     {
@@ -144,6 +154,7 @@ String urlTestConnection = "https://pipe.leananalistic.com.ua/api/fromesp";
 String urlTest = "https://dev-pipe.leananalistic.com.ua/api/test";
 int buttom = 0;
 
+vector<String> json_buffer = vector<String>();
 //1 - not connection to wifi
 //2 - https fail begining to url
 //3 - https code < 0
@@ -218,9 +229,9 @@ int SyncTime(String url) {
             if (httpCode > 0) {
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                     String payload = https.getString();
-                    //Serial.printf("pay load: \n", payload);                    
+                    //Serial.printf("sync time: \n", payload);                    
                     //Serial.printf("sync time\n");
-                    timelocal.set_time(payload);
+                    if(httpCode == 200)timelocal.set_time(payload);
                     https.end();
                     return httpCode;
                 }
@@ -269,7 +280,7 @@ void setup() {
     //digitalWrite(buttom, HIGH);
     //Serial.setDebugOutput(true);
     Serial.begin(9600);
-    // Serial.setDebugOutput(true);
+    Serial.setDebugOutput(true);
   
     pinMode(buttom, OUTPUT);
     Serial.println();
@@ -290,59 +301,66 @@ void setup() {
     //WiFiMulti.addAP("kormotech", "a9GyeUce");
     //WiFiMulti.addAP("ASUS", "donperes");
     //WiFiMulti.addAP("AP", "donperes");
-    SyncTime(urlTime);
-    
+    if (SyncTime(urlTime) != 200)timelocal.first_start = false;
 }
-
-String SN = "2";
+String Read_Serial(String SN) {
+    String ho = String(timelocal.hour);
+    String mi = String(timelocal.minute);
+    String se = String(timelocal.second);
+    digitalWrite(buttom, LOW);
+    delay(1);
+    String msg = Serial.readString();
+    delay(1);
+    digitalWrite(buttom, HIGH);
+    return "{\"SN\":" + SN
+        + ",\"HO\":" + ho
+        + ",\"MI\":" + mi
+        + ",\"SE\":" + se
+        + msg;
+}
+void Post(String msg) {
+    Serial.print("sendData return code "); Serial.println(sendData(msg, urlTest));
+    Serial.print("SyncTime return code "); Serial.println(SyncTime(urlTime));
+}
+void Buff(String msg,unsigned long time_loss) {
+    json_buffer.push_back(msg);
+    Serial.println("Add to bufer");
+    timelocal.Add_seconds(((millis() - time_loss) / 1000) + 2);
+    Serial.print("Add_seconds "); Serial.println((millis() - time_loss) / 1000);
+}
+void Flush() {
+    for (int i = 0; i < json_buffer.size(); i++)
+    {   
+        String msg = json_buffer[i];
+        Serial.print("Flush  ");
+        Serial.print(sendData(msg, urlTest));
+        Serial.println(msg);
+    }
+    json_buffer.clear();
+}
+const String SN = "4";
 void loop() {
-    timelocal.Run();
-    
-    /*Serial.printf("sec: % d\n", timelocal.second);
-    Serial.end();*/
-    //Serial.println(timelocal.second);
-    
-    
- /*   if (timelocal.second == 1)
+    if (timelocal.first_start)
     {
-        digitalWrite(buttom, LOW);
-        String msg = Serial.readString();
+        timelocal.Run();
+        
+        //if (timelocal.second == 0 || timelocal.second == 20 || timelocal.second == 40)
+        if (timelocal.second == 0)
+        {
+            String data_from_counter = Read_Serial(SN);
+            unsigned long time_loss = millis();
+            int code = Test_connection(urlTestConnection);
+            Serial.print("Test_connection return code"); Serial.println(code);
+            if (code == 200) {
+                if (!json_buffer.empty())Flush();
+                Post(data_from_counter);
+            }
+            else {
+                Buff(data_from_counter, time_loss);
+            }
+        }
 
     }
-    else
-    {
-        digitalWrite(buttom, HIGH);
-    }*/
-    if (timelocal.second == 1)
-    {
-        int code = Test_connection(urlTestConnection);
-        if (code == 200) {
-            digitalWrite(buttom, LOW);
-            delay(1);
-            String msg = Serial.readString();
-            delay(1);
-            digitalWrite(buttom, HIGH);
-            digitalWrite(buttom, HIGH);
-            digitalWrite(buttom, HIGH);
-            String ho = String(timelocal.hour);
-            String mi = String(timelocal.minute);
-            String se = String(timelocal.second);
-                /*sendData(
-                    "{\"SN\":" + SN 
-                    + ",\"HO\":"+ "5"
-                    + ",\"MI\":" + "10"
-                    + ",\"SE\":" + "0"
-                    + msg, urlTest);
-            */
-            int code = sendData(msg, urlTest);
-            Serial.println(code);
-            SyncTime(urlTime);
-        }
-    }else
-    {
-        digitalWrite(buttom, HIGH);
-    }
-    //,"A":5,"B":4,"C":56,"D":40,"E":0,"F":0,"G":0,"H":0}
-     
+        else SyncTime(urlTime);
 }
 

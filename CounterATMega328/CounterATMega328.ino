@@ -10,6 +10,7 @@
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 #include <stdio.h>
+#include <ArduinoQueue.h>
 
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345);
 
@@ -166,6 +167,18 @@ bool flagN = true;
 SoftwareSerial mySerial(rxPin, txPin);
 int buttom = 12;
 bool ADXL345conn = true;
+
+void display_freeram() {
+	Serial.print(F("- SRAM left: "));
+	Serial.println(freeRam());
+}
+
+int freeRam() {
+	extern int __heap_start, * __brkval;
+	int v;
+	return (int)&v - (__brkval == 0
+		? (int)&__heap_start : (int)__brkval);
+}
 void setup(void) {
 #ifndef ESP8266
 	while (!Serial); // for Leonardo/Micro/Zero
@@ -472,8 +485,17 @@ void Accelerometer(bool conn) {
 	}
 	
 }
+unsigned long i = 0;
+unsigned long is = 0;
+unsigned long iss = 0;
+unsigned long isss = 0;
+ArduinoQueue<String> json_buffer = ArduinoQueue<String>();
 
 void loop(void) {
 	//CountRunTime(10000);
-	CountTipa(true);
+	//CountTipa(true);
+	//Serial.println(f("I'm in flash now"));
+	json_buffer.enqueue("\"A\":0,\"B\":0,\"C\":0,\"D\":0,\"E\":0,\"F\":0,\"G\":0,\"H\":0,\"I\":0.00,\"J\":0.00,\"K\":0.00,\"L\":0.00,\"M\":0.00,\"N\":0.00}");
+	Serial.print(json_buffer.itemCount());
+	display_freeram();
 }

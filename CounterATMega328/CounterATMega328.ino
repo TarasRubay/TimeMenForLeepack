@@ -10,6 +10,7 @@
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 #include <stdio.h>
+#include <ArduinoQueue.h>
 
 Adafruit_ADXL345_Unified accel = Adafruit_ADXL345_Unified(12345);
 
@@ -166,13 +167,30 @@ bool flagN = true;
 SoftwareSerial mySerial(rxPin, txPin);
 int buttom = 12;
 bool ADXL345conn = true;
+
+void display_freeram() {
+	Serial.print(F("- SRAM left: "));
+	Serial.println(freeRam());
+}
+
+int freeRam() {
+	extern int __heap_start, * __brkval;
+	int v;
+	return (int)&v - (__brkval == 0
+		? (int)&__heap_start : (int)__brkval);
+}
 void setup(void) {
 #ifndef ESP8266
 	while (!Serial); // for Leonardo/Micro/Zero
 #endif
 	Serial.begin(9600);
 	mySerial.begin(9600);
-
+	for (uint8_t t = 15; t > 0; t--) {
+		Serial.print("[SETUP] WAIT:  ");
+		Serial.println(t);
+		Serial.flush();
+		delay(1000);
+	}
 	if (!accel.begin())
 	{
 		/* There was a problem detecting the ADXL345 ... check your connections */
@@ -293,6 +311,7 @@ void SendJsonDataNew(int serialNumber, long int timeStop, int avgSpeedF, int avg
 	StaticJsonDocument<256> doc2;
 	String a;
 	serializeJson(doc, a);
+
 	doc2["jsondata"] =  a;
 	//{"jsondata": "{SN:32, TS : 1600, AVGF : 9, AVGS : 7}"}
 	//serializeJson(doc2, Serial);
@@ -355,14 +374,14 @@ void CountTipa(bool writeSerial) {
 }
 void SendTipaJson(bool writeSerial) {
 	if (writeSerial) {
-	Serial.print("{\"SN\":");
+	/*Serial.print("{\"SN\":");
 	Serial.print(2);
 	Serial.print(",\"HO\":");
 	Serial.print(22);
 	Serial.print(",\"MI\":");
 	Serial.print(22);
 	Serial.print(",\"SE\":");
-	Serial.print(22);
+	Serial.print(22);*/
 	Serial.print(",\"A\":");
 	Serial.print(A);
 	Serial.print(",\"B\":");
@@ -393,7 +412,7 @@ void SendTipaJson(bool writeSerial) {
 	Serial.print(N);
 	Serial.print("}");
 	}
-	
+	/*
 	mySerial.print("{\"SN\":");
 	mySerial.print(2222);
 	mySerial.print(",\"HO\":");
@@ -401,7 +420,7 @@ void SendTipaJson(bool writeSerial) {
 	mySerial.print(",\"MI\":");
 	mySerial.print(33);
 	mySerial.print(",\"SE\":");
-	mySerial.print(33);
+	mySerial.print(33);*/
 	mySerial.print(",\"A\":");
 	mySerial.print(A);
 	mySerial.print(",\"B\":");
@@ -466,8 +485,17 @@ void Accelerometer(bool conn) {
 	}
 	
 }
+unsigned long i = 0;
+unsigned long is = 0;
+unsigned long iss = 0;
+unsigned long isss = 0;
+ArduinoQueue<String> json_buffer = ArduinoQueue<String>();
 
 void loop(void) {
 	//CountRunTime(10000);
-	CountTipa(true);
+	//CountTipa(true);
+	//Serial.println(f("I'm in flash now"));
+	json_buffer.enqueue("\"A\":0,\"B\":0,\"C\":0,\"D\":0,\"E\":0,\"F\":0,\"G\":0,\"H\":0,\"I\":0.00,\"J\":0.00,\"K\":0.00,\"L\":0.00,\"M\":0.00,\"N\":0.00}");
+	Serial.print(json_buffer.itemCount());
+	display_freeram();
 }

@@ -86,7 +86,7 @@ public:
         
         _time_step = millis() + 1000;
         if(!first_start) first_start = true;
-        Serial.println(">>time sync>> ");
+        Serial.print(">>time sync>> ");
     }
     Time operator++()
     {
@@ -160,10 +160,12 @@ String dev_urlTime = "https://dev-pipe.leananalistic.com.ua/api/syncdatetime/tim
 String dev_urlPostData = "https://dev-pipe.leananalistic.com.ua/api/test";
 String dev_urlTestConnection = "https://dev-pipe.leananalistic.com.ua/api/fromesp";
 String dev_urlPostArray = "https://dev-pipe.leananalistic.com.ua/api/test/arraybuffer";
+String dev_urlPostTestString = "https://dev-pipe.leananalistic.com.ua/api/test/teststring";
+String dev_urlGetTestString = "https://dev-pipe.leananalistic.com.ua/api/test/getpost";
 int buttom = 0;
 int code_target = 200;
-const String SN = "1111";
-int max_size_bufferString = 60;
+const String SN = "2";
+int max_size_bufferString = 30;
 
 ///////////////////////////////////////////////////////////////////// static varibles
 
@@ -181,7 +183,12 @@ int sendData(String message,String url) {
             https.addHeader("User-Agent", "Arduino");
             https.addHeader("Accept", "*/*");
             https.addHeader("Connection", "keep-alive");
-            int httpCode = https.POST(message);
+            int httpCode = https.POST(message);//"{\"value\":\"lfkdjkwelifjwepoifjw;eofjwe\"}"
+            //String msg = "{\"value\":\"" + message + "\"}";
+            //int httpCode = https.POST(msg);//"{\"value\":\"lfkdjkwelifjwepoifjw;eofjwe\"}"
+            //Serial.print(httpCode);
+            //Serial.print(" ");
+            //Serial.println(msg);
             if (httpCode > 0) {
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                     String payload = https.getString();
@@ -217,6 +224,9 @@ int sendArray(String url) {
             https.addHeader("Accept", "*/*");
             https.addHeader("Connection", "keep-alive");
             int httpCode = https.POST(arr_json_buffer + ']');
+            Serial.print(httpCode);
+            Serial.print(" ");
+            Serial.println(arr_json_buffer + ']');
             if (httpCode > 0) {
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                     String payload = https.getString();
@@ -359,6 +369,7 @@ void Post(String msg,unsigned long time_loss) {
         }
        Serial.print("sendData run ");
        int code = sendData(msg, dev_urlPostData);
+       //int code = sendData(msg, dev_urlPostTestString); //for testing
        Serial.println(code);
        if (code == code_target)break;
         else Serial.println("; resend ");
@@ -369,12 +380,17 @@ void Post(String msg,unsigned long time_loss) {
 void BuffString(String msg, unsigned long time_loss) { 
     if (arr_json_buffer_size < max_size_bufferString) {
         if (arr_json_buffer.length() < 100) {
+            if (msg.length() > 80) {
             arr_json_buffer += msg;
             arr_json_buffer_size++;
+            }
+            else Serial.println("small size length");
         }
         else {
-            arr_json_buffer += ',' + msg;
-            arr_json_buffer_size++;
+            if (msg.length() > 50) {
+                arr_json_buffer += ',' + msg;
+                arr_json_buffer_size++;
+            }else Serial.println("small size length");
         }
         Serial.println("Add to string bufer");
     }
@@ -382,6 +398,7 @@ void BuffString(String msg, unsigned long time_loss) {
     {
         Serial.print("STACK OVERFLOW ");
         Serial.println(arr_json_buffer.length());
+        Read_Serial(SN);
     }
     timelocal.Add_seconds(((millis() - time_loss) / 1000) + 2);
     Serial.print("Add_seconds "); Serial.println((millis() - time_loss) / 1000);
@@ -396,6 +413,7 @@ int FlushString(unsigned long time_loss) {
             Serial.print("sendArray run ");
             delay(1000);
             int code = sendArray(dev_urlPostArray);
+            //int code = sendArray(dev_urlPostTestString);//for send test string
             Serial.println(code);
             if (code == code_target) {
                 arr_json_buffer.~String();
@@ -432,12 +450,13 @@ void loop() {
         }
         timelocal.Run();
         
+        //if (timelocal.second == my_time.second)
         //if (timelocal.second == 0)
-        if (timelocal.second == my_time.second)
+        if (timelocal.second == 0 || timelocal.second == 20 || timelocal.second == 40)
         {
-            my_time.Add_seconds(my_event);
-            //String data_from_counter = Read_Serial(SN);
-            String data_from_counter = Read_Serial_FAKE(SN);
+            //my_time.Add_seconds(my_event);
+            String data_from_counter = Read_Serial(SN);
+            //String data_from_counter = Read_Serial_FAKE(SN);
             unsigned long time_loss = millis();
             if (WiFiMulti.run() == WL_CONNECTED) {
                 conn_flag2 = true;
@@ -466,6 +485,6 @@ void loop() {
     else 
     {
         Serial.println("try to sync time");
-        SyncTime(urlTime);
+        if (SyncTime(urlTime) == code_target)Read_Serial(SN);
     }
 }

@@ -493,9 +493,9 @@ ArduinoQueue<String> json_buffer = ArduinoQueue<String>();
 
 void loop(void) {
 	//CountRunTime(10000);
-	//CountTipa(true);
+	CountTipa(true);
 	//Serial.println(f("I'm in flash now"));
-	json_buffer.enqueue("\"A\":0,\"B\":0,\"C\":0,\"D\":0,\"E\":0,\"F\":0,\"G\":0,\"H\":0,\"I\":0.00,\"J\":0.00,\"K\":0.00,\"L\":0.00,\"M\":0.00,\"N\":0.00}");
+	/*json_buffer.enqueue("\"A\":0,\"B\":0,\"C\":0,\"D\":0,\"E\":0,\"F\":0,\"G\":0,\"H\":0,\"I\":0.00,\"J\":0.00,\"K\":0.00,\"L\":0.00,\"M\":0.00,\"N\":0.00}");
 	Serial.print(json_buffer.itemCount());
-	display_freeram();
+	display_freeram();*/
 }

@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ESPRealTimeMen", "ESPRealTi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CounterNano", "..\..\..\..\OneDrive - KORM_ENZ\Документи\Arduino\CounterNano\CounterNano.vcxproj", "{77E27789-E25B-4092-8616-B9A334527355}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EspManualConecction", "EspManualConecction\EspManualConecction.vcxproj", "{7351265B-5E57-49A2-BD83-FA6F6067FC2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{77E27789-E25B-4092-8616-B9A334527355}.Release|Any CPU.Build.0 = Release|Win32
 		{77E27789-E25B-4092-8616-B9A334527355}.Release|x86.ActiveCfg = Release|Win32
 		{77E27789-E25B-4092-8616-B9A334527355}.Release|x86.Build.0 = Release|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Debug|Any CPU.Build.0 = Debug|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Debug|x86.ActiveCfg = Debug|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Debug|x86.Build.0 = Debug|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|Any CPU.ActiveCfg = Release|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|Any CPU.Build.0 = Release|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|x86.ActiveCfg = Release|Win32
+		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

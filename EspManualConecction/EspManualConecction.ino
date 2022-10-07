@@ -526,8 +526,8 @@ void loop() {
             //if (timelocal.second == 0 || timelocal.second == 20 || timelocal.second == 40)
         {
             //my_time.Add_seconds(my_event);
-            //String data_from_counter = Read_Serial(SN);
-            String data_from_counter = Read_Serial_FAKE(SN);
+            String data_from_counter = Read_Serial(SN);
+            //String data_from_counter = Read_Serial_FAKE(SN);
             unsigned long time_loss = millis();
             if (WiFiMulti.run() == WL_CONNECTED) {
                 conn_flag2 = true;

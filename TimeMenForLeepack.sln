@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CounterNano", "..\..\..\..\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EspManualConecction", "EspManualConecction\EspManualConecction.vcxproj", "{7351265B-5E57-49A2-BD83-FA6F6067FC2E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WifiManager", "WifiManager\WifiManager.vcxproj", "{26325B10-1300-427A-ACA9-60633B98963D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|Any CPU.Build.0 = Release|Win32
 		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|x86.ActiveCfg = Release|Win32
 		{7351265B-5E57-49A2-BD83-FA6F6067FC2E}.Release|x86.Build.0 = Release|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Debug|Any CPU.Build.0 = Debug|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Debug|x86.ActiveCfg = Debug|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Debug|x86.Build.0 = Debug|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Release|Any CPU.ActiveCfg = Release|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Release|Any CPU.Build.0 = Release|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Release|x86.ActiveCfg = Release|Win32
+		{26325B10-1300-427A-ACA9-60633B98963D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

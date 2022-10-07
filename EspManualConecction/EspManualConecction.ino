@@ -8,7 +8,7 @@
 
 using namespace std;
 
-#define TRIGGER_PIN 4
+#define TRIGGER_PIN 2
 bool wm_nonblocking = false; // change to true to use non blocking
 
 WiFiManager wm; // global wm instance
@@ -379,8 +379,8 @@ void checkButton() {
             }
             Serial.println("Starting config portal");
             wm.setConfigPortalTimeout(120);
-
-            if (!wm.startConfigPortal("OnDemandAP", "password")) {
+            
+            if (!wm.startConfigPortal("Lean_SN-2", "password")) {
                 Serial.println("failed to connect or hit timeout");
                 delay(3000);
             }

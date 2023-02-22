@@ -63,7 +63,7 @@ public:
             _add_one_step();
             this->Print();
         }
-        
+
     }
     void set_time(String playload) {
         //1:37:03
@@ -83,9 +83,9 @@ public:
         this->second = dat[2];
         t.clear();
         dat.clear();
-        
+
         _time_step = millis() + 1000;
-        if(!first_start) first_start = true;
+        if (!first_start) first_start = true;
         Serial.print(">>time sync>> ");
     }
     Time operator++()
@@ -173,7 +173,7 @@ int max_size_bufferString = 30;
 //2 - https fail begining to url
 //3 - https code < 0
 //<200 - response from server
-int sendData(String message,String url) {
+int sendData(String message, String url) {
     if ((WiFiMulti.run() == WL_CONNECTED)) {
         std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
         client->setInsecure();
@@ -265,7 +265,7 @@ int SyncTime(String url) {
             if (httpCode > 0) {
                 if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
                     String payload = https.getString();
-                    if(httpCode == 200)timelocal.set_time(payload);
+                    if (httpCode == 200)timelocal.set_time(payload);
                     https.end();
                     return httpCode;
                 }
@@ -294,9 +294,9 @@ int Test_connection(String url) {
             https.addHeader("Connection", "keep-alive");
             int httpCode = https.GET();
             if (httpCode > 0) {
-                    https.end();
-                    return httpCode;
-             }
+                https.end();
+                return httpCode;
+            }
             else {
                 https.end();
                 return 3;
@@ -312,7 +312,7 @@ int Test_connection(String url) {
 void setup() {
     Serial.begin(9600);
     //Serial.setDebugOutput(true);
-  
+
     pinMode(buttom, OUTPUT);
     Serial.println();
     Serial.println();
@@ -325,7 +325,7 @@ void setup() {
     }
 
     WiFi.mode(WIFI_STA);
-    
+
     WiFiMulti.addAP("DANA", "11160045");
     //WiFiMulti.addAP("kormotech", "a9GyeUce");
     //WiFiMulti.addAP("ASUS", "donperes");
@@ -333,16 +333,19 @@ void setup() {
     //WiFiMulti.addAP("AP", "donperes");
     if (SyncTime(urlTime) == 200)Serial.println("!!!sync time!!!");
     else timelocal.first_start = false;
+    Serial.end();
 }
 String Read_Serial(String SN) {
     String ho = String(timelocal.hour);
     String mi = String(timelocal.minute);
     String se = String(timelocal.second);
+    Serial.begin(9600);
     digitalWrite(buttom, LOW);
     delay(1);
     String msg = Serial.readString();
     delay(1);
     digitalWrite(buttom, HIGH);
+    Serial.end();
     return "{\"SN\":" + SN
         + ",\"HO\":" + ho
         + ",\"MI\":" + mi
@@ -353,37 +356,41 @@ String Read_Serial_FAKE(String SN) {
     String ho = String(timelocal.hour);
     String mi = String(timelocal.minute);
     String se = String(timelocal.second);
-    
+
     return "{\"SN\":" + SN
         + ",\"HO\":" + ho
         + ",\"MI\":" + mi
         + ",\"SE\":" + se
         + ",\"A\":0,\"B\":0,\"C\":0,\"D\":0,\"E\":0,\"F\":0,\"G\":0,\"H\":0,\"I\":0.00,\"J\":0.00,\"K\":0.00,\"L\":0.00,\"M\":0.00,\"N\":0.00}";
 }
-void Post(String msg,unsigned long time_loss) {
-    
-    for (int i = 0; i < 4; i++)
+void Post(String msg, unsigned long time_loss) {
+
+    for (int i = 0; i < 3; i++)
     {
-        if (i > 2) {
-            BuffString(msg, time_loss);
-            break;
+        //Serial.print("send Data in Post ");
+        int code = sendData(msg, dev_urlPostData);
+        //Serial.println(code);
+        if (code == code_target)break;
+        //else Serial.println("try resend ");
+        if (i > 2 || code != code_target) {
+            while (true) {
+                //Serial.println("try sync time");
+                if (SyncTime(urlTime) == 200) {
+                    Serial.println("!!!sync time!!!");
+                    break;
+                }
+            };
         }
-       Serial.print("sendData run ");
-       int code = sendData(msg, dev_urlPostData);
-       //int code = sendData(msg, dev_urlPostTestString); //for testing
-       Serial.println(code);
-       if (code == code_target)break;
-        else Serial.println("; resend ");
     }
-    
+
 }
 
-void BuffString(String msg, unsigned long time_loss) { 
+void BuffString(String msg, unsigned long time_loss) {
     if (arr_json_buffer_size < max_size_bufferString) {
         if (arr_json_buffer.length() < 100) {
             if (msg.length() > 80) {
-            arr_json_buffer += msg;
-            arr_json_buffer_size++;
+                arr_json_buffer += msg;
+                arr_json_buffer_size++;
             }
             else Serial.println("small size length");
         }
@@ -391,7 +398,8 @@ void BuffString(String msg, unsigned long time_loss) {
             if (msg.length() > 50) {
                 arr_json_buffer += ',' + msg;
                 arr_json_buffer_size++;
-            }else Serial.println("small size length");
+            }
+            else Serial.println("small size length");
         }
         Serial.println("Add to string bufer");
     }
@@ -405,88 +413,55 @@ void BuffString(String msg, unsigned long time_loss) {
     Serial.print("Add_seconds "); Serial.println((millis() - time_loss) / 1000);
 }
 int FlushString(unsigned long time_loss) {
-        Serial.print("Flush  ");
-        Serial.print("size[");
-        Serial.print(arr_json_buffer_size);
-        Serial.println("]");
-        for (int i = 0; i < 4; i++)
-        {
-            Serial.print("sendArray run ");
-            delay(1000);
-            int code = sendArray(dev_urlPostArray);
-            //int code = sendArray(dev_urlPostTestString);//for send test string
-            Serial.println(code);
-            if (code == code_target) {
-                arr_json_buffer.~String();
-                arr_json_buffer = "[";
-                arr_json_buffer_size = 0;
-                return code;
-            }
-            else Serial.println(" resend ");
+    Serial.print("Flush  ");
+    Serial.print("size[");
+    Serial.print(arr_json_buffer_size);
+    Serial.println("]");
+    for (int i = 0; i < 4; i++)
+    {
+        Serial.print("sendArray run ");
+        delay(1000);
+        int code = sendArray(dev_urlPostArray);
+        //int code = sendArray(dev_urlPostTestString);//for send test string
+        Serial.println(code);
+        if (code == code_target) {
+            arr_json_buffer.~String();
+            arr_json_buffer = "[";
+            arr_json_buffer_size = 0;
+            return code;
         }
-        return 0;
+        else Serial.println(" resend ");
+    }
+    return 0;
 }
 int my_event = 9;
 Time my_time;
 bool conn_flag = false;
 bool conn_flag2 = false;
 void loop() {
-
-    if (conn_flag && conn_flag2) {
-        Serial.println("emercy sync time");
-        SyncTime(urlTime);
-        conn_flag = false;
-        conn_flag2 = false;
-    }
-   
-    if (timelocal.first_start) 
+    if (timelocal.first_start)
     {
-        if (conn_flag) {
-            if (millis() + 1000 > timelocal.get_millis()) {
-                Serial.print("emercy add seconds ");
-                Serial.println(timelocal.get_millis());
-                timelocal.Print();
-                timelocal.Add_seconds(1);
-            }
-        }
+
         timelocal.Run();
-        
+
         //if (timelocal.second == my_time.second)
         if (timelocal.second == 0)
-        //if (timelocal.second == 0 || timelocal.second == 20 || timelocal.second == 40)
+            //if (timelocal.second == 0 || timelocal.second == 20 || timelocal.second == 40)
         {
             //my_time.Add_seconds(my_event);
             String data_from_counter = Read_Serial(SN);
             //String data_from_counter = Read_Serial_FAKE(SN);
             unsigned long time_loss = millis();
             if (WiFiMulti.run() == WL_CONNECTED) {
-                conn_flag2 = true;
                 int code = Test_connection(dev_urlTestConnection);
                 Serial.print("TestConn run "); Serial.println(code);
-                if (code == code_target) {
-                    if (arr_json_buffer_size > 0) {
-                        int flush_code = FlushString(time_loss);
-                        if (flush_code == code_target)Post(data_from_counter, time_loss);
-                        else BuffString(data_from_counter, time_loss);
-                    }
-                    else Post(data_from_counter, time_loss);
-                }
-                else {
-                    BuffString(data_from_counter, time_loss);
-                }
+                Post(data_from_counter, time_loss);
             }
-            else {
-                BuffString(data_from_counter, time_loss + 1000);
-                conn_flag = true;
-                conn_flag2 = false;
-            }
-            data_from_counter.~String();
-           
         }
     }
-    else 
+    else
     {
-        Serial.println("try to sync time");
-        if (SyncTime(urlTime) == code_target)Read_Serial(SN);
+        //Serial.println("try to sync time");
+        SyncTime(urlTime);
     }
-}   
+}

@@ -185,7 +185,7 @@ void setup(void) {
 #endif
 	Serial.begin(9600);
 	mySerial.begin(9600);
-	for (uint8_t t = 25; t > 0; t--) {
+	for (uint8_t t = 10; t > 0; t--) {
 		Serial.print("[SETUP] WAIT:  ");
 		Serial.println(t);
 		Serial.flush();
@@ -410,7 +410,7 @@ void SendTipaJson(bool writeSerial) {
 		Serial.print(M);
 		Serial.print(",\"N\":");
 		Serial.print(N);
-		Serial.print("}");
+		Serial.println("}");
 	}
 	/*
 	mySerial.print("{\"SN\":");
@@ -493,7 +493,7 @@ ArduinoQueue<String> json_buffer = ArduinoQueue<String>();
 
 void loop(void) {
 	//CountRunTime(10000);
-	CountTipa(true);
+	CountTipa(false);
 	//Serial.println(f("I'm in flash now"));
 	/*json_buffer.enqueue("\"A\":0,\"B\":0,\"C\":0,\"D\":0,\"E\":0,\"F\":0,\"G\":0,\"H\":0,\"I\":0.00,\"J\":0.00,\"K\":0.00,\"L\":0.00,\"M\":0.00,\"N\":0.00}");
 	Serial.print(json_buffer.itemCount());

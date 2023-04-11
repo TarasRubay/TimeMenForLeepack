@@ -152,16 +152,16 @@ public:
 };
 Time timelocal;
 ESP8266WiFiMulti WiFiMulti;
-String urlTime = "https://pipe.leananalistic.com.ua/api/syncdatetime/time";
-String urlPostData = "https://pipe.leananalistic.com.ua/api/fromesp";
-String urlTestConnection = "https://pipe.leananalistic.com.ua/api/fromesp";
+String urlTime = "https://pipe.myfactory.tech/api/syncdatetime/time";
+String urlPostData = "https://pipe.myfactory.tech/api/fromesp";
+String urlTestConnection = "https://pipe.myfactory.tech/api/fromesp";
 //testing
-String dev_urlTime = "https://dev-pipe.leananalistic.com.ua/api/syncdatetime/time";
-String dev_urlPostData = "https://dev-pipe.leananalistic.com.ua/api/test";
-String dev_urlTestConnection = "https://dev-pipe.leananalistic.com.ua/api/fromesp";
-String dev_urlPostArray = "https://dev-pipe.leananalistic.com.ua/api/test/arraybuffer";
-String dev_urlPostTestString = "https://dev-pipe.leananalistic.com.ua/api/test/teststring";
-String dev_urlGetTestString = "https://dev-pipe.leananalistic.com.ua/api/test/getpost";
+String dev_urlTime = "https://dev-pipe.myfactory.tech/api/syncdatetime/time";
+String dev_urlPostData = "https://dev-pipe.myfactory.tech/api/test";
+String dev_urlTestConnection = "https://dev-pipe.myfactory.tech/api/fromesp";
+String dev_urlPostArray = "https://dev-pipe.myfactory.tech/api/test/arraybuffer";
+String dev_urlPostTestString = "https://dev-pipe.myfactory.tech/api/test/teststring";
+String dev_urlGetTestString = "https://dev-pipe.myfactory.tech/api/test/getpost";
 int buttom = 0;
 int code_target = 200;
 const String SN = "2";

@@ -365,16 +365,18 @@ String Read_Serial_FAKE(String SN) {
 }
 void Post(String msg, unsigned long time_loss) {
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
         //Serial.print("send Data in Post ");
         int code = sendData(msg, dev_urlPostData);
         //Serial.println(code);
         if (code == code_target)break;
         //else Serial.println("try resend ");
-        if (i > 2 || code != code_target) {
+        
+        if (code != code_target) {
             while (true) {
                 //Serial.println("try sync time");
+                ESP.restart(); // restart when no connecting
                 if (SyncTime(urlTime) == 200) {
                     Serial.println("!!!sync time!!!");
                     break;
@@ -456,6 +458,7 @@ void loop() {
                 int code = Test_connection(dev_urlTestConnection);
                 Serial.print("TestConn run "); Serial.println(code);
                 Post(data_from_counter, time_loss);
+                if(timelocal.hour == 0 && timelocal.minute == 0 && timelocal.second == 0)ESP.restart(); //restart every night
             }
         }
     }
@@ -463,5 +466,6 @@ void loop() {
     {
         //Serial.println("try to sync time");
         SyncTime(urlTime);
+       if(millis()>120000)ESP.restart();//restart every 5 minute
     }
 }

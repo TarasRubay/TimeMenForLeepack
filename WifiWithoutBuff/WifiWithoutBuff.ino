@@ -331,6 +331,7 @@ void setup() {
     //WiFiMulti.addAP("ASUS", "donperes");
     //WiFiMulti.addAP("CVK", "416611998");
     //WiFiMulti.addAP("AP", "donperes");
+    //WiFiMulti.addAP("Kormotech-Prulbyci Legacy", "VsiQzxl7K3");
     if (SyncTime(urlTime) == 200)Serial.println("!!!sync time!!!");
     else timelocal.first_start = false;
     Serial.end();

@@ -6,7 +6,21 @@
 
 
 using namespace std;
-
+ESP8266WiFiMulti WiFiMulti;
+String urlTime = "https://pipe.myfactory.tech/api/syncdatetime/time";
+String urlPostData = "https://pipe.myfactory.tech/api/fromesp";
+String urlTestConnection = "https://pipe.myfactory.tech/api/fromesp";
+//testing
+String dev_urlTime = "https://dev-pipe.myfactory.tech/api/syncdatetime/time";
+String dev_urlPostData = "https://dev-pipe.myfactory.tech/api/test";
+String dev_urlTestConnection = "https://dev-pipe.myfactory.tech/api/fromesp";
+String dev_urlPostArray = "https://dev-pipe.myfactory.tech/api/test/arraybuffer";
+String dev_urlPostTestString = "https://dev-pipe.myfactory.tech/api/test/teststring";
+String dev_urlGetTestString = "https://dev-pipe.myfactory.tech/api/test/getpost";
+int buttom = 0;
+int code_target = 200;
+const String SN = "1";
+int max_size_bufferString = 30;
 ///////////////////////////////////////////////////////////////////// static varibles
 String arr_json_buffer = "[";
 int arr_json_buffer_size = 0;
@@ -151,21 +165,8 @@ public:
     }
 };
 Time timelocal;
-ESP8266WiFiMulti WiFiMulti;
-String urlTime = "https://pipe.leananalistic.com.ua/api/syncdatetime/time";
-String urlPostData = "https://pipe.leananalistic.com.ua/api/fromesp";
-String urlTestConnection = "https://pipe.leananalistic.com.ua/api/fromesp";
-//testing
-String dev_urlTime = "https://dev-pipe.leananalistic.com.ua/api/syncdatetime/time";
-String dev_urlPostData = "https://dev-pipe.leananalistic.com.ua/api/test";
-String dev_urlTestConnection = "https://dev-pipe.leananalistic.com.ua/api/fromesp";
-String dev_urlPostArray = "https://dev-pipe.leananalistic.com.ua/api/test/arraybuffer";
-String dev_urlPostTestString = "https://dev-pipe.leananalistic.com.ua/api/test/teststring";
-String dev_urlGetTestString = "https://dev-pipe.leananalistic.com.ua/api/test/getpost";
-int buttom = 0;
-int code_target = 200;
-const String SN = "2";
-int max_size_bufferString = 30;
+
+
 
 ///////////////////////////////////////////////////////////////////// static varibles
 
@@ -309,8 +310,8 @@ int Test_connection(String url) {
     }
     return 1;
 }
-void setup() {
-    Serial.begin(9600);
+void setup() { ////////////////////////////////////////////////////////////////////////setup
+    //Serial.begin(9600);
     //Serial.setDebugOutput(true);
 
     pinMode(buttom, OUTPUT);
@@ -318,7 +319,7 @@ void setup() {
     Serial.println();
     Serial.println();
 
-    for (uint8_t t = 4; t > 0; t--) {
+    for (uint8_t t = 3; t > 0; t--) {
         Serial.printf("[SETUP] WAIT %d...\n", t);
         Serial.flush();
         delay(1000);
@@ -326,11 +327,12 @@ void setup() {
 
     WiFi.mode(WIFI_STA);
 
-    WiFiMulti.addAP("DANA", "11160045");
+    //WiFiMulti.addAP("DANA", "11160045");
     //WiFiMulti.addAP("kormotech", "a9GyeUce");
     //WiFiMulti.addAP("ASUS", "donperes");
     //WiFiMulti.addAP("CVK", "416611998");
     //WiFiMulti.addAP("AP", "donperes");
+    WiFiMulti.addAP("Kormotech-Prylbychi Legacy", "VsiQzxl7K3");
     if (SyncTime(urlTime) == 200)Serial.println("!!!sync time!!!");
     else timelocal.first_start = false;
     Serial.end();
@@ -365,16 +367,18 @@ String Read_Serial_FAKE(String SN) {
 }
 void Post(String msg, unsigned long time_loss) {
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
-        //Serial.print("send Data in Post ");
+        Serial.print("send Data in Post ");//////////////////////////////////////////////////////////////////////////////////////////////////////////////
         int code = sendData(msg, dev_urlPostData);
         //Serial.println(code);
         if (code == code_target)break;
         //else Serial.println("try resend ");
-        if (i > 2 || code != code_target) {
+        
+        if (code != code_target) {
             while (true) {
                 //Serial.println("try sync time");
+                ESP.restart(); // restart when no connecting
                 if (SyncTime(urlTime) == 200) {
                     Serial.println("!!!sync time!!!");
                     break;
@@ -456,12 +460,14 @@ void loop() {
                 int code = Test_connection(dev_urlTestConnection);
                 Serial.print("TestConn run "); Serial.println(code);
                 Post(data_from_counter, time_loss);
+                if(timelocal.hour == 0 && timelocal.minute == 0 && timelocal.second == 0)ESP.restart(); //restart every night
             }
         }
     }
     else
     {
-        //Serial.println("try to sync time");
+        Serial.println("try to sync time");//////////////////////////////////////////////////////////////////////////////////////////////////////////////
         SyncTime(urlTime);
+       if(millis()>120000)ESP.restart();//restart every 5 minute
     }
 }

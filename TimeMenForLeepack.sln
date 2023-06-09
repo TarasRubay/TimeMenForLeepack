@@ -33,6 +33,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WifiWithoutBuff", "WifiWith
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NanoWithoutAccelerometer", "NanoWithoutAccelerometer\NanoWithoutAccelerometer.vcxproj", "{DD23704C-E4EA-45B6-90DE-F11D4EA1AE4C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prodaction ESP-01S", "Prodaction ESP-01S\Prodaction ESP-01S.vcxproj", "{D16F476F-BB3C-4BBD-B428-3B7FB041358B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Prodaction Arduino Nano 328p", "Prodaction Arduino Nano 328p\Prodaction Arduino Nano 328p.vcxproj", "{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +165,22 @@ Global
 		{DD23704C-E4EA-45B6-90DE-F11D4EA1AE4C}.Release|Any CPU.Build.0 = Release|Win32
 		{DD23704C-E4EA-45B6-90DE-F11D4EA1AE4C}.Release|x86.ActiveCfg = Release|Win32
 		{DD23704C-E4EA-45B6-90DE-F11D4EA1AE4C}.Release|x86.Build.0 = Release|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Debug|Any CPU.Build.0 = Debug|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Debug|x86.ActiveCfg = Debug|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Debug|x86.Build.0 = Debug|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Release|Any CPU.Build.0 = Release|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Release|x86.ActiveCfg = Release|Win32
+		{D16F476F-BB3C-4BBD-B428-3B7FB041358B}.Release|x86.Build.0 = Release|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Debug|Any CPU.Build.0 = Debug|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Debug|x86.Build.0 = Debug|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Release|Any CPU.Build.0 = Release|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Release|x86.ActiveCfg = Release|Win32
+		{8C5DFC11-CA0C-49D9-B59D-3C176020BED5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

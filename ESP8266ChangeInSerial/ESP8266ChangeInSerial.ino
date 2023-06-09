@@ -332,7 +332,10 @@ void setup() {
     //WiFiMulti.addAP("CVK", "416611998");
     //WiFiMulti.addAP("AP", "donperes");
     if (SyncTime(urlTime) == 200)Serial.println("!!!sync time!!!");
-    else timelocal.first_start = false;
+    else {
+      Serial.println("!!!NO sync time!!!");
+      timelocal.first_start = false;
+    }
     Serial.end();
 }
 String Read_Serial(String SN) {
@@ -352,6 +355,12 @@ String Read_Serial(String SN) {
         + ",\"SE\":" + se
         + msg;
 }
+void Destroy_Serial() {
+    digitalWrite(buttom, LOW);
+    delay(2);
+    digitalWrite(buttom, HIGH);
+    }
+    
 String Read_Serial_FAKE(String SN) {
     String ho = String(timelocal.hour);
     String mi = String(timelocal.minute);
@@ -401,7 +410,7 @@ void BuffString(String msg, unsigned long time_loss) {
     {
         Serial.print("STACK OVERFLOW ");
         Serial.println(arr_json_buffer.length());
-        Read_Serial(SN);
+        Destroy_Serial();
     }
     timelocal.Add_seconds(((millis() - time_loss) / 1000) + 2);
     Serial.print("Add_seconds "); Serial.println((millis() - time_loss) / 1000);
@@ -434,12 +443,12 @@ bool conn_flag = false;
 bool conn_flag2 = false;
 void loop() {
 
-    if (conn_flag && conn_flag2) {
-        Serial.println("emercy sync time");
-        SyncTime(urlTime);
-        conn_flag = false;
-        conn_flag2 = false;
-    }
+      if (conn_flag && conn_flag2) {
+          Serial.println("emercy sync time");
+          SyncTime(urlTime);
+          conn_flag = false;
+          conn_flag2 = false;
+      }
    
     if (timelocal.first_start) 
     {
@@ -489,6 +498,7 @@ void loop() {
     else 
     {
         Serial.println("try to sync time");
-        if (SyncTime(urlTime) == code_target)Read_Serial(SN);
+        SyncTime(urlTime);
+        Destroy_Serial();
     }
 }   

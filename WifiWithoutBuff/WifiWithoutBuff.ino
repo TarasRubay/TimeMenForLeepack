@@ -405,7 +405,7 @@ void BuffString(String msg, unsigned long time_loss) {
             }
             else Serial.println("small size length");
         }
-        Serial.println("Add to string bufer");
+        Serial.println("Add to string bufer"); 
     }
     else
     {

@@ -470,7 +470,7 @@ void SendTipaJson(bool writeSerial) {
 	K = 0;
 	L = 0;
 	M = 0;
-	N = 0;
+	N = 0; 
 }
 void Accelerometer(bool conn) {
 	if (conn) {

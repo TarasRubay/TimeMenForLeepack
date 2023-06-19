@@ -327,12 +327,12 @@ void setup() { /////////////////////////////////////////////////////////////////
 
     WiFi.mode(WIFI_STA);
 
-    //WiFiMulti.addAP("DANA", "11160045");
+    WiFiMulti.addAP("DANA", "11160045");
     //WiFiMulti.addAP("kormotech", "a9GyeUce");
     //WiFiMulti.addAP("ASUS", "donperes");
     //WiFiMulti.addAP("CVK", "416611998");
     //WiFiMulti.addAP("AP", "donperes");
-    WiFiMulti.addAP("Kormotech-Prylbychi Legacy", "VsiQzxl7K3");
+    //WiFiMulti.addAP("Kormotech-Prylbychi Legacy", "VsiQzxl7K3");
     if (SyncTime(urlTime) == 200)Serial.println("!!!sync time!!!");
     else timelocal.first_start = false;
     Serial.end();
